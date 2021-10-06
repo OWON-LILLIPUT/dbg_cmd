@@ -8,7 +8,7 @@
 
 #include "bsp.h"
 #include "main.h"
-#include "demo.h"
+#include "app_demo.h"
 #include "nor_little_fs.h"
 #include "project.h"
 #include "myprint.h"
@@ -123,7 +123,7 @@ void admin_1ms_thread_isr()
             tim_cnt_10ms++;
             break;
         case 2:
-            demo_10ms_thread_isr();
+            app_demo_10ms_thread_isr();
             break;
         case 10:
             tim_cnt_1ms = 0;
@@ -152,7 +152,7 @@ static void admin_100ms_thread()  //后台100mS进程
             admin_1s_thread();
             break;
     }
-    demo_100ms_thread();
+    app_demo_100ms_thread();
 }
 
 int main()
@@ -166,12 +166,12 @@ int main()
     dbg_cmd_init(1);// 上电默认启动命令行
     dbg_cmd_add_list((int)dbg_cmd_func);
 #endif
-    demo_init();
+    app_demo_init();
     nor_little_fs_init();
     project_init();
     while (1) {
         project_real_time_thread();
-        demo_real_time_thread();
+        app_demo_real_time_thread();
         if (tim_cnt_10ms >= 10) {
             tim_cnt_10ms -= 10;
             admin_100ms_thread();
