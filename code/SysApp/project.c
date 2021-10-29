@@ -78,7 +78,7 @@ void project_real_time_thread()
 void project_init()
 {
 #ifdef DBG_CMD_EN
-    dbg_cmd_add_list((int)dbg_cmd_func);
+    dbg_cmd_add_list((CMD_FUNC_T)dbg_cmd_func);
 #endif
 }
 

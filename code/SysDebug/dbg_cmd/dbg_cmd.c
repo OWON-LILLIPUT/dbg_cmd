@@ -29,6 +29,8 @@
  *      Add DBG_CMD_MODULE_EN on/off
  *      Del bool param type
  *      Del LogoName
+ *   2021-10-30 06:53:43 Inker.Dong
+ *      Add CMD_FUNC_T
  *
  */
 
@@ -63,7 +65,7 @@ struct dbg_cmd_s {
     unsigned char    seconds;
     unsigned char    prn_cmd_msg_en;
     unsigned char    dbg_cmd_list_cnt;
-    int              dab_cmd_list_buf[DBG_CMD_LIST_NUM];
+    CMD_FUNC_T       dab_cmd_list_buf[DBG_CMD_LIST_NUM];
 };
 
 struct dbg_cmd_s dbg_cmd;
@@ -118,7 +120,7 @@ static bool cmd_end_is_enter(char *str)
     }
 }
 
-static bool param_type_1byte(char *str, char *val) /*参数为8位类型*/
+static bool param_type_1byte(char *str, char *val) /*参数为1字节类型*/
 {
     bool result = true;
     char i = 0, temp8 = 0;
@@ -180,7 +182,7 @@ static bool param_type_1byte(char *str, char *val) /*参数为8位类型*/
     return result;
 }
 
-static bool param_type_2byte(char *str, short *val) /*参数为16位类型*/
+static bool param_type_2byte(char *str, short *val) /*参数为2字节类型*/
 {
     bool result = true;
     char i = 0;
@@ -244,7 +246,7 @@ static bool param_type_2byte(char *str, short *val) /*参数为16位类型*/
 }
 
 #if ( PARAM_4BYTE_NUM >= 1 )
-static bool param_type_4byte(char *str, long *val) /*参数为16位类型*/
+static bool param_type_4byte(char *str, long *val) /*参数为4字节类型*/
 {
     bool result = true;
     char  i = 0;
@@ -378,7 +380,7 @@ static bool param_type_float(char *str, float *val) /*参数为浮点类型*/
 #endif
 
 #if ( PARAM_STRING_NUM >= 1 )
-static bool param_type_str(char *str, char Array[]) /*参数为8位类型*/
+static bool param_type_str(char *str, char Array[]) /*参数为字符串*/
 {
     bool result = true;
     char i = 0;
@@ -647,7 +649,7 @@ fail:
     return false;
 }
 
-void dbg_cmd_add_list(int func_addr)
+void dbg_cmd_add_list(CMD_FUNC_T func_addr)
 {
     if (dbg_cmd.dbg_cmd_list_cnt < DBG_CMD_LIST_NUM) {
         dbg_cmd.dab_cmd_list_buf[dbg_cmd.dbg_cmd_list_cnt] = func_addr;
@@ -729,7 +731,7 @@ void dbg_cmd_init(char dbg_cmd_en)
         DBG_CMD_PRN("%s>", "InkerSys");
     }
 #ifdef DBG_CMD_MODULE_EN
-    dbg_cmd_add_list((int)dbg_cmd_func);
+    dbg_cmd_add_list((CMD_FUNC_T)dbg_cmd_func);
 #endif
 }
 #endif

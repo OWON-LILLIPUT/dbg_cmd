@@ -16,9 +16,12 @@ extern "C"
 
 #ifdef PRINTF_INFO_EN
 
+// mcu function address type
+typedef	unsigned int PUT_FUNC_T;
+
 #define PRINT_BUF_SIZE 128 // 打印缓存大小
 
-extern void print_init(int print_out_func);
+extern void print_init(PUT_FUNC_T print_out_func);
 extern int  myprint_func(const char *format, ...);
 extern void print_hex_array(char hex[], int len);
 extern void print_level(int set_print_level, const int print_level, const char *format, ...);

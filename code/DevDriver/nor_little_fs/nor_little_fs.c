@@ -228,8 +228,8 @@ void nor_little_fs_read(char filename[], char mode)
     // 获取文件长度
     filelen = lfs_file_size(&lfs, &file);
     PRN_LEVEL(prn_level, 1, "lfs_file_size:%d\n", filelen);
-    if (filelen > 100) {
-        filelen = 100;
+    if (filelen > 64) {
+        filelen = 64;
     }
     res = lfs_file_read(&lfs, &file, ReadBuf, filelen);
     if (res < 0) {
@@ -398,7 +398,7 @@ void nor_little_fs_init()
         }
     }
 #ifdef DBG_CMD_EN
-    dbg_cmd_add_list((int)dbg_cmd_func);
+    dbg_cmd_add_list((CMD_FUNC_T)dbg_cmd_func);
 #endif
 }
 #endif

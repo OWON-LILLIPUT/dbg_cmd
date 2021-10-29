@@ -7,7 +7,11 @@
 #define DBG_CMD_EN    // 屏蔽关闭所以模块命令行功能
 #endif
 
+
 #ifdef DBG_CMD_EN
+
+// mcu function address type
+typedef	unsigned int CMD_FUNC_T;
 
 #include <string.h>
 #include <stdio.h>
@@ -72,7 +76,7 @@ extern bool dbg_cmd_exec(char *cmd, char param_table[], char help_msg[]);
  * #endif
  * }
  */
-extern void dbg_cmd_add_list(int func_addr);
+extern void dbg_cmd_add_list(CMD_FUNC_T func_addr);
 extern void dbg_cmd_print_msg_en(void);
 extern void dbg_cmd_1s_thread(void);
 extern void dbg_cmd_rxd(char rxd);

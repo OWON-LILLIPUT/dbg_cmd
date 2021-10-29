@@ -160,11 +160,11 @@ int main()
     char rxd;
     // 初始化串口队列
     queue_init();
-    print_init((int)put_txd1_queue);
+    print_init((PUT_FUNC_T)put_txd1_queue);
     mcu_bsp_init();
 #ifdef DBG_CMD_EN
     dbg_cmd_init(1);// 上电默认启动命令行
-    dbg_cmd_add_list((int)dbg_cmd_func);
+    dbg_cmd_add_list((CMD_FUNC_T)dbg_cmd_func);
 #endif
     app_demo_init();
     nor_little_fs_init();

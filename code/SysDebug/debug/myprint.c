@@ -23,7 +23,7 @@ struct myprint_cfg_s {
 };
 struct myprint_cfg_s myprint_cfg;
 
-void print_init(int print_out_func)
+void print_init(PUT_FUNC_T print_out_func)
 {
     myprint_cfg.print_out = (print_func)print_out_func;
 }
