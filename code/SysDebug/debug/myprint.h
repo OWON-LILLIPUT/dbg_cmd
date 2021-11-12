@@ -31,7 +31,7 @@ extern void print_level(int set_print_level, const int print_level, const char *
 #    define PRINT(fmt, ...)             myprint_func(fmt, ##__VA_ARGS__)
 #    define PRN_HEXS(a,b)               print_hex_array(a,b)
 #    define PRN_LEVEL(a,b,fmt, ...)     print_level(a,b,fmt, ##__VA_ARGS__)
-#    define PRN_ERR(fmt, ...)           myprint_func("%s(%d):%s() Error****"fmt,  __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
+#    define PRN_ERR(fmt, ...)           myprint_func("%s(%d) %s(): error: #%s",__FILE__, __LINE__, __FUNCTION__, fmt, ##__VA_ARGS__)
 
 #else
 
