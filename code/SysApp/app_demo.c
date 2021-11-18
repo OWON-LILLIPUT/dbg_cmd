@@ -22,6 +22,7 @@
 /************************************************************************/
 #define MODULE_PRINT_INFO_EN // 屏蔽不定义 关闭此模块打印信息
 #ifdef MODULE_PRINT_INFO_EN
+#define PRINT_DETAIL_MODE    // module detail print message
 
 #include "myprint.h"  /* 其他地方myprint.h不可出现此之前 */
 
@@ -32,7 +33,6 @@ static int prn_level = 0;/* setting module print level */
 #else
 
 #define PRINT(fmt, ...)             ( (void)0 )
-#define PRN_ERR(fmt, ...)           ( (void)0 )
 #define PRN_HEXS(a,b)               ( (void)0 )
 #define PRN_LEVEL(a,b,fmt, ...)     ( (void)0 )
 

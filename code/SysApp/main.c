@@ -15,7 +15,10 @@
 
 #include <stdbool.h>
 
+#ifdef PRINTF_INFO_EN
 static int prn_level = 0; /* 信息打印等级 */
+#endif
+
 struct sys_param_s sys_param;
 
 /*

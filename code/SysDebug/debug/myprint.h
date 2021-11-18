@@ -16,6 +16,14 @@ extern "C"
 
 #ifdef PRINTF_INFO_EN
 
+enum print_level_e {
+PRN_CRITICAL   = 0,
+PRN_ERROR      = 1,
+PRN_WARNING    = 2,
+PRN_INFO       = 3,
+PRN_DEBUG      = 4,
+};
+
 // mcu function address type
 typedef	unsigned int PUT_FUNC_T;
 
@@ -28,19 +36,20 @@ extern void print_level(int set_print_level, const int print_level, const char *
 
 #ifdef MODULE_PRINT_INFO_EN
 
-#    define PRINT(fmt, ...)             myprint_func(fmt, ##__VA_ARGS__)
-#    define PRN_HEXS(a,b)               print_hex_array(a,b)
-#    define PRN_LEVEL(a,b,fmt, ...)     print_level(a,b,fmt, ##__VA_ARGS__)
-#    define PRN_ERR(fmt, ...)           myprint_func("%s(%d) %s(): error: #%s",__FILE__, __LINE__, __FUNCTION__, fmt, ##__VA_ARGS__)
+#define PRINT(fmt, ...)                    myprint_func(fmt, ##__VA_ARGS__)
+#define PRN_HEXS(a,b)                      print_hex_array(a,b)
+
+//#    define PRINT_DETAIL_MODE // global detail print message
+#    ifdef  PRINT_DETAIL_MODE
+#       define PRN_LEVEL(a,b,fmt, ...)     print_level (a,b,"%s(%d) %s(): level(%d) #%s",__FILE__, __LINE__, __FUNCTION__, b, fmt, ##__VA_ARGS__)
+#    else
+#       define PRN_LEVEL(a,b,fmt, ...)     print_level(a,b,fmt, ##__VA_ARGS__)
+#    endif
 
 #else
 
 #    ifndef PRINT
 #    define PRINT(fmt, ...)             ( (void)0 )
-#    endif
-
-#    ifndef PRN_ERR
-#    define PRN_ERR(fmt, ...)           ( (void)0 )
 #    endif
 
 #    ifndef PRN_HEXS
@@ -61,7 +70,6 @@ extern void print_level(int set_print_level, const int print_level, const char *
 #define print_level(a,b,fmt, ...)       ( (void)0 )
 
 #define PRINT(fmt, ...)                 ( (void)0 )
-#define PRN_ERR(fmt, ...)               ( (void)0 )
 #define PRN_HEXS(a,b)                   ( (void)0 )
 #define PRN_LEVEL(a,b,fmt, ...)         ( (void)0 )
 

@@ -23,14 +23,16 @@ typedef	unsigned int CMD_FUNC_T;
 
 #define DBG_CMD_MODULE_EN // 屏蔽时关闭自身模块命令功能
 
+// cmd config list
 #define DBG_CMD_LIST_NUM       32 // 最大注册模块个数
 #define DBG_CMD_BUF_LEN        32 // 接收最大命令长度
+#define PARAM_STR_LEN          16 // 接收字符串参数类型 字符长度
+#define PARAM_FLT_LEN          10 // 接收浮点型参数类型 字符长度
 #define PARAM_1BYTE_NUM        3  // "1" 1byte
 #define PARAM_2BYTE_NUM        3  // "2" 2byte
 #define PARAM_4BYTE_NUM        1  // "4" 4byte  0:disable build
 #define PARAM_FOLAT_NUM        1  // "f" float  0:disable build
 #define PARAM_STRING_NUM       2  // "s" string 0:disable build
-#define PARAM_STR_LEN          16 // "s" string 接收参数字符串长度
 
 extern char  get_param_char(char index);
 extern short get_param_short(char index);

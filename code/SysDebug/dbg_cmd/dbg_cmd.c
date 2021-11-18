@@ -31,6 +31,12 @@
  *      Del LogoName
  *   2021-10-30 06:53:43 Inker.Dong
  *      Add CMD_FUNC_T
+ *   2021-11-19 00:18:35
+ *      #add string param input mode not ""
+ *        eg1: cmdstr str1
+ *        eg2: cmdstr "str1 str2"
+ *      #add float param input length user config
+ *        eg1: cmdfloat 0.000000001 (PARAM_FLT_LEN 11)
  *
  */
 
@@ -124,7 +130,7 @@ static bool param_type_1byte(char *str, char *val) /*参数为1字节类型*/
 {
     bool result = true;
     char i = 0, temp8 = 0;
-    if (*str == 'H' || *str == 'h') { //十六进制格式
+    if (*str == 'H' || *str == 'h') { //十六进制格式解析
         str++;
         dbg_cmd.cmd_str_pos++;
         while (i < 2) {
@@ -156,7 +162,7 @@ static bool param_type_1byte(char *str, char *val) /*参数为1字节类型*/
                 result = false;
             }
         }
-    } else {
+    } else { //十进制格式解析
         while (i < 3) {
             if (*str >= '0' && *str <= '9') {
                 temp8 *= 10;
@@ -187,7 +193,7 @@ static bool param_type_2byte(char *str, short *val) /*参数为2字节类型*/
     bool result = true;
     char i = 0;
     short temp16 = 0;
-    if (*str == 'H' || *str == 'h') { //十六进制格式
+    if (*str == 'H' || *str == 'h') { //十六进制格式解析
         str++;
         dbg_cmd.cmd_str_pos++;
         while (i < 4) {
@@ -219,7 +225,7 @@ static bool param_type_2byte(char *str, short *val) /*参数为2字节类型*/
                 result = false;
             }
         }
-    } else {
+    } else {  //十进制格式解析
         while (i < 6) {
             if (*str >= '0' && *str <= '9') {
                 temp16 *= 10;
@@ -251,7 +257,7 @@ static bool param_type_4byte(char *str, long *val) /*参数为4字节类型*/
     bool result = true;
     char  i = 0;
     long tempu32 = 0;
-    if (*str == 'H' || *str == 'h') { //十六进制格式
+    if (*str == 'H' || *str == 'h') { //十六进制格式解析
         str++;
         dbg_cmd.cmd_str_pos++;
         while (i < 8) {
@@ -283,7 +289,7 @@ static bool param_type_4byte(char *str, long *val) /*参数为4字节类型*/
                 result = false;
             }
         }
-    } else {
+    } else { //十进制格式解析
         while (i < 10) {
             if (*str >= '0' && *str <= '9') {
                 tempu32 *= 10;
@@ -315,44 +321,29 @@ static bool param_type_float(char *str, float *val) /*参数为浮点类型*/
 {
     bool result = true;
     char i = 0, flag = 0, sign = 0;
-    float tempf1 = 0, tempf2 = 0, tempf3 = 0;
+    float integer = 0, decimal = 0, tempf = 0,decimal_10enx = 0;
     if (*str == '-') { //负号
         str++;
         dbg_cmd.cmd_str_pos++;
         sign = 1;
     }
-    while (i < 8) {
+    while (i < PARAM_FLT_LEN) {
         if (*str >= '0' && *str <= '9') {
             if (flag) {
-                tempf3 = (*str) & 0X0F;
-                if (flag == 1) {
-                    tempf2 += tempf3 / 10;
-                }
-                if (flag == 2) {
-                    tempf2 += tempf3 / 100;
-                }
-                if (flag == 3) {
-                    tempf2 += tempf3 / 1000;
-                }
-                if (flag == 4) {
-                    tempf2 += tempf3 / 10000;
-                }
-                if (flag == 5) {
-                    tempf2 += tempf3 / 100000;
-                }
-                if (flag == 6) {
-                    tempf2 += tempf3 / 1000000;
-                }
+                tempf = (*str) & 0X0F;
+                decimal += tempf / decimal_10enx;
+                decimal_10enx *= 10;
                 flag++;
             } else {
-                tempf1 *= 10;
-                tempf1 += (*str) & 0X0F;
+                integer *= 10;
+                integer += (*str) & 0X0F;
             }
             str++;
             i++;
             dbg_cmd.cmd_str_pos++;
         } else if (*str == '.' && flag == 0) {
             flag = 1;
+            decimal_10enx = 10;
             str++;
             i++;
             dbg_cmd.cmd_str_pos++;
@@ -363,16 +354,16 @@ static bool param_type_float(char *str, float *val) /*参数为浮点类型*/
     if (i == 0) { /*参数之间不是一个空格错误*/
         result = false;
     }
-    if (i == 8) { /*数据范围错误*/
+    if (i == PARAM_FLT_LEN) { /*数据范围错误*/
         if (*str >= '0' && *str <= '9') {
             result = false;
         }
     }
-    tempf3 = tempf1 + tempf2;
+    tempf = integer + decimal;
     if (sign) {
-        *val = -tempf3;
+        *val = -tempf;
     } else {
-        *val = tempf3;
+        *val = tempf;
     }
     dbg_cmd.cmd_str_pos++;
     return result;
@@ -383,15 +374,21 @@ static bool param_type_float(char *str, float *val) /*参数为浮点类型*/
 static bool param_type_str(char *str, char Array[]) /*参数为字符串*/
 {
     bool result = true;
-    char i = 0;
-    if (*str != '"') {
-        return false;
+    char i = 0,mode = 0;
+    if (*str == '"') {
+        mode = 1;
+        str++;
+        dbg_cmd.cmd_str_pos++;
     }
-    str++;
-    dbg_cmd.cmd_str_pos++;
     while (i < PARAM_STR_LEN - 3) {
-        if (*str == '"') {
+        if ((*str == '"') && (mode == 1)) { // end "
             dbg_cmd.cmd_str_pos++;
+            Array[i] = '\0';
+            break;
+        } else if ((*str == ' ') && (mode == 0)){ // end space
+            Array[i] = '\0';
+            break;
+        } else if ((*str == '\r') && (mode == 0)){// end \r
             Array[i] = '\0';
             break;
         } else {

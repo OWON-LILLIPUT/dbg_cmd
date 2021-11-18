@@ -32,7 +32,6 @@ static int prn_level = 0; /* 信息打印等级 */
 #else
 
 #define PRINT(fmt, ...)             ( (void)0 )
-#define PRN_ERR(fmt, ...)           ( (void)0 )
 #define PRN_HEXS(a,b)               ( (void)0 )
 #define PRN_LEVEL(a,b,fmt, ...)     ( (void)0 )
 
