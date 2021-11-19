@@ -239,7 +239,7 @@ static void mcu_gpio_cfg_init(void)
 #ifdef MCU_STM32F3_2KB
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE, ENABLE);
 #endif
-    AFIO->MAPR = (0x00FFFFFF & AFIO->MAPR) | 0x04000000; //¹Ø±ÕJTAG
+    //AFIO->MAPR = (0x00FFFFFF & AFIO->MAPR) | 0x04000000; //¹Ø±ÕJTAG
     for (i = 0; gpio_cfg_tbl[i].GPIO_PRT; i++) {
         if (gpio_cfg_tbl[i].GpioEn) {
             if ((gpio_cfg_tbl[i].GPIO_INIT.GPIO_Mode == GPIO_Mode_Out_OD) || (gpio_cfg_tbl[i].GPIO_INIT.GPIO_Mode == GPIO_Mode_Out_PP)) {
