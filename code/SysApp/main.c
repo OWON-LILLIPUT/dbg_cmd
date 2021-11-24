@@ -163,7 +163,7 @@ int main()
     char rxd;
     // 初始化串口队列
     queue_init();
-    print_init((PUT_FUNC_T)put_txd1_queue);
+    my_print_init((PUT_FUNC_T)put_txd1_queue);
     mcu_bsp_init();
 #ifdef DBG_CMD_EN
     dbg_cmd_init(1);// 上电默认启动命令行

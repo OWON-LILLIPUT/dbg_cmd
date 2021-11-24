@@ -29,21 +29,21 @@ typedef	unsigned int PUT_FUNC_T;
 
 #define PRINT_BUF_SIZE 128 // 打印缓存大小
 
-extern void print_init(PUT_FUNC_T print_out_func);
-extern int  myprint_func(const char *format, ...);
-extern void print_hex_array(char hex[], int len);
-extern void print_level(int set_print_level, const int print_level, const char *format, ...);
+extern void my_print_init(PUT_FUNC_T print_out_func);
+extern int  my_print_format(const char *format, ...);
+extern void my_print_array(char hex[], int len);
+extern void my_print_level(int set_print_level, const int print_level, const char *format, ...);
 
 #ifdef MODULE_PRINT_INFO_EN
 
-#define PRINT(fmt, ...)                    myprint_func(fmt, ##__VA_ARGS__)
-#define PRN_HEXS(a,b)                      print_hex_array(a,b)
+#define PRINT(fmt, ...)                    my_print_format(fmt, ##__VA_ARGS__)
+#define PRN_HEXS(a,b)                      my_print_array(a,b)
 
 //#    define PRINT_DETAIL_MODE // global detail print message
 #    ifdef  PRINT_DETAIL_MODE
-#       define PRN_LEVEL(a,b,fmt, ...)     print_level (a,b,"%s(%d) %s(): level(%d) #%s",__FILE__, __LINE__, __FUNCTION__, b, fmt, ##__VA_ARGS__)
+#       define PRN_LEVEL(a,b,fmt, ...)     my_print_level(a,b,"%s(%d) %s(): level(%d) #"fmt,__FILE__, __LINE__, __FUNCTION__, b, ##__VA_ARGS__)
 #    else
-#       define PRN_LEVEL(a,b,fmt, ...)     print_level(a,b,fmt, ##__VA_ARGS__)
+#       define PRN_LEVEL(a,b,fmt, ...)     my_print_level(a,b,fmt, ##__VA_ARGS__)
 #    endif
 
 #else
@@ -64,10 +64,10 @@ extern void print_level(int set_print_level, const int print_level, const char *
 
 #else
 
-#define print_init(a)                   ( (void)0 )
-#define myprint_func(fmt, ...)          ( (void)0 )
-#define print_hex_array(a,b)            ( (void)0 )
-#define print_level(a,b,fmt, ...)       ( (void)0 )
+#define my_print_init(a)                ( (void)0 )
+#define my_print_format(fmt, ...)       ( (void)0 )
+#define my_print_array(a,b)             ( (void)0 )
+#define my_print_level(a,b,fmt, ...)    ( (void)0 )
 
 #define PRINT(fmt, ...)                 ( (void)0 )
 #define PRN_HEXS(a,b)                   ( (void)0 )

@@ -9,6 +9,8 @@
  *
  *   2021-07-25 by Inker.Dong
  *   First create.
+ *   2021-11-25 00:40:37
+ *   add my_print_string
  */
 
 #include "myprint.h"
@@ -17,55 +19,65 @@
 
 typedef bool (*print_func)(char);
 
-struct myprint_cfg_s {
+struct my_print_cfg_s {
     char  print_buf[PRINT_BUF_SIZE];       //格式打印缓存地址
     print_func print_out;
 };
-struct myprint_cfg_s myprint_cfg;
 
-void print_init(PUT_FUNC_T print_out_func)
+struct my_print_cfg_s my_print_cfg;
+
+void my_print_init(PUT_FUNC_T print_out_func)
 {
-    myprint_cfg.print_out = (print_func)print_out_func;
+    my_print_cfg.print_out = (print_func)print_out_func;
 }
 
-int myprint_func(const char *format, ...)
+void my_print_string(const char str[])
 {
-    int length = 0, i = 0;
+    int length = strlen(str);
+    for (int i = 0; i < length; i++) {
+        my_print_cfg.print_out(str[i]);
+    }
+}
+
+int my_print_format(const char *format, ...)
+{
+    int str_len;
     va_list arg_ptr;
     va_start (arg_ptr, format);           /* format string */
-    vsnprintf (myprint_cfg.print_buf, PRINT_BUF_SIZE, format, arg_ptr);
+    str_len = vsnprintf (my_print_cfg.print_buf, PRINT_BUF_SIZE, format, arg_ptr);
     va_end (arg_ptr);
-    length = strlen(myprint_cfg.print_buf);
-    for (i = 0; i < length; i++) {
-        myprint_cfg.print_out(myprint_cfg.print_buf[i]);
+    my_print_string(my_print_cfg.print_buf);
+    if (str_len > PRINT_BUF_SIZE) {
+        my_print_string("\r\nstr len > print buf size\r\n");
     }
-    return length;
+    return str_len;
 }
-void print_hex_array(char hex[], int len)
+
+void my_print_array(char array[], int len)
 {
-    int i;
-    myprint_func("\r\n");
-    myprint_func("     00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
-    for (i = 0; i < len; i ++) {
+    my_print_string("\r\n");
+    my_print_string("     00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+    for (int i = 0; i < len; i ++) {
         if ( i % 16 == 0 ) {
-            myprint_func("\r\n0x%0.2X:", i);
+            my_print_format("\r\n0x%0.2X:", i);
         }
-        myprint_func("%0.2X ", hex[i]);
+        my_print_format("%0.2X ", array[i]);
     }
-    myprint_func("\r\n");
+    my_print_string("\r\n");
 }
-void print_level(int set_print_level, const int print_level, const char *format, ...)
+
+void my_print_level(int set_print_level, const int print_level, const char *format, ...)
 {
     if (print_level <= set_print_level) {
-        int length, i;
+        int str_len;
         va_list arg_ptr;
         va_start (arg_ptr, format);
-        vsnprintf (myprint_cfg.print_buf, PRINT_BUF_SIZE, format, arg_ptr);
-        length = strlen(myprint_cfg.print_buf);
-        for (i = 0; i < length; i++) {
-            myprint_cfg.print_out(myprint_cfg.print_buf[i]);
-        }
+        str_len = vsnprintf(my_print_cfg.print_buf, PRINT_BUF_SIZE, format, arg_ptr);
         va_end (arg_ptr);
+        my_print_string(my_print_cfg.print_buf);
+        if (str_len > PRINT_BUF_SIZE) {
+            my_print_string("\r\nstr len > print buf size\r\n");
+        }
     }
 }
 

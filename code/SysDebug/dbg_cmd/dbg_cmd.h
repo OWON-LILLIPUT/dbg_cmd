@@ -18,7 +18,7 @@ typedef	unsigned int CMD_FUNC_T;
 #include <stdarg.h>
 #include <stdbool.h>
 
-#define DBG_CMD_PRN(format, ...) myprint_func(format, ##__VA_ARGS__)
+#define DBG_CMD_PRN(format, ...) my_print_format(format, ##__VA_ARGS__)
 //#define DBG_CMD_PRN(format, ...) printf(format, ##__VA_ARGS__)
 
 #define DBG_CMD_MODULE_EN // 屏蔽时关闭自身模块命令功能
